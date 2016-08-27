@@ -21,6 +21,7 @@ public class DropOnContact : MonoBehaviour {
 
             if (p.PlayerHasFire() == true && dropObject.GetComponent("Rigidbody") as Rigidbody == null) {
                 dropObject.AddComponent<Rigidbody>();
+                Destroy(gameObject);
             }
         }
     }
