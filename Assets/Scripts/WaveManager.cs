@@ -9,12 +9,45 @@ class Enemy {
 }
 
 class Wave {
+
+	// Enemy definitions
 	public Enemy[] enemies;
+
+	// Wave has started
 	public bool started = false;
+
+	// Wave has completed
 	public bool completed = false;
+
+	// Spawn delay
 	public float delay = 2.0f;
+
+	// Current countdown for spawn delay
 	public float currentDelay = 2.0f;
+
+	// Spawn queue
 	public List<Action> queue = new List<Action> ();
+
+	// List of all spawns
+	public List<GameObject> spawns = new List<GameObject>();
+
+	public bool AllEnemiesDied() {
+		for (int i = 0; i < spawns.Count; i++) {
+			if (!spawns[i].GetComponent<EnemyProperties>().IsDead()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public void Spawn (GameObject enemy, Vector3 position, GameObject path) {
+		enemy.transform.position = position;
+
+		enemy.AddComponent<FollowPath> ();
+		enemy.AddComponent<Rigidbody> ();
+		enemy.GetComponent<FollowPath> ().path = path;
+		enemy.GetComponent<Rigidbody> ().isKinematic = true;
+	}
 }
 
 public class WaveManager : MonoBehaviour
@@ -39,6 +72,7 @@ public class WaveManager : MonoBehaviour
 	};
 
 	public GameObject path;
+	public GameObject waveCompleteScreen;
 	
 	void Update ()
 	{
@@ -55,15 +89,14 @@ public class WaveManager : MonoBehaviour
 
 				for (int i = 0; i < enemy.number; i++) {
 					waves [currentWave].queue.Add (() => {
-						GameObject e = Instantiate (resource) as GameObject;
-						e.transform.position = transform.position;
-
-						e.AddComponent<FollowPath> ();
-						e.AddComponent<Rigidbody> ();
-						e.GetComponent<FollowPath> ().path = path;
-						e.GetComponent<Rigidbody> ().isKinematic = true;
+						waves[currentWave].Spawn(
+							Instantiate (resource) as GameObject,
+							transform.position,
+							path
+						);
 					});
 				}
+
 			}
 		} else if (!current.completed) {
 
@@ -71,7 +104,18 @@ public class WaveManager : MonoBehaviour
 			if (waves [currentWave].currentDelay < 0) {
 				waves [currentWave].currentDelay = waves[currentWave].delay;
 
-				if (waves[currentWave].queue.Count == 0) {
+				if (waves[currentWave].queue.Count == 0 && waves[currentWave].AllEnemiesDied()) {
+
+					/*
+					 * If a wave complete screen is set, activate it and
+					 * remove it after the cooldown.
+					 */
+					if (waveCompleteScreen != null) {
+						waveCompleteScreen.SetActive (true);
+
+						// TODO: remove after cooldown
+					}
+
 					waves [currentWave].completed = true;
 					return;
 				}
