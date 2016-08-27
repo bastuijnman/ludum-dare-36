@@ -5,14 +5,14 @@ public class AttackBuilding : MonoBehaviour
 {
 
 	BuildingProperties properties;
-	SphereCollider collider;
+	SphereCollider attackZone;
 
 	void Start () {
 		properties = GetComponent<BuildingProperties> ();
 
-		collider = gameObject.AddComponent<SphereCollider> ();
-		collider.isTrigger = true;
-		collider.radius = properties.radius;
+		attackZone = gameObject.AddComponent<SphereCollider> ();
+		attackZone.isTrigger = true;
+		attackZone.radius = properties.radius;
 	}
 
 	void OnTriggerEnter (Collider col) {
