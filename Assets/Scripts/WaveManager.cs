@@ -81,15 +81,15 @@ public class WaveManager : MonoBehaviour
 		if (!current.started) {
 
 			// Referencing issue?
-			waves [currentWave].started = true;
+			current.started = true;
 
 			foreach (Enemy enemy in current.enemies) {
 
 				UnityEngine.Object resource = Resources.Load ("Prefabs/Enemies/" + enemy.type);
 
 				for (int i = 0; i < enemy.number; i++) {
-					waves [currentWave].queue.Add (() => {
-						waves[currentWave].Spawn(
+					current.queue.Add (() => {
+						current.Spawn(
 							Instantiate (resource) as GameObject,
 							transform.position,
 							path
@@ -100,11 +100,11 @@ public class WaveManager : MonoBehaviour
 			}
 		} else if (!current.completed) {
 
-			waves [currentWave].currentDelay -= Time.deltaTime;
-			if (waves [currentWave].currentDelay < 0) {
-				waves [currentWave].currentDelay = waves[currentWave].delay;
+			current.currentDelay -= Time.deltaTime;
+			if (current.currentDelay < 0) {
+				current.currentDelay = current.delay;
 
-				if (waves[currentWave].queue.Count == 0 && waves[currentWave].AllEnemiesDied()) {
+				if (current.queue.Count == 0 && current.AllEnemiesDied()) {
 
 					/*
 					 * If a wave complete screen is set, activate it and
@@ -116,12 +116,12 @@ public class WaveManager : MonoBehaviour
 						// TODO: remove after cooldown
 					}
 
-					waves [currentWave].completed = true;
+					current.completed = true;
 					return;
 				}
 
-				waves [currentWave].queue [0] ();
-				waves [currentWave].queue.RemoveAt (0);
+				current.queue [0] ();
+				current.queue.RemoveAt (0);
 			}
 
 		} else {
