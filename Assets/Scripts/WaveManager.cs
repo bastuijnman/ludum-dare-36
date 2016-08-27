@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,11 +20,10 @@ class Wave {
 	// Wave has completed
 	public bool completed = false;
 
-	// Spawn delay
-	public float delay = 2.0f;
-
 	// Current countdown for spawn delay
-	public float currentDelay = 2.0f;
+	public float currentSpawnDelay = SPAWN_DELAY;
+
+	public float currentCooldownDelay = COOLDOWN_DELAY;
 
 	// Spawn queue
 	public List<Action> queue = new List<Action> ();
@@ -48,6 +48,9 @@ class Wave {
 		enemy.GetComponent<FollowPath> ().path = path;
 		enemy.GetComponent<Rigidbody> ().isKinematic = true;
 	}
+
+	public static float SPAWN_DELAY = 2.0f;
+	public static float COOLDOWN_DELAY = 30.0f;
 }
 
 public class WaveManager : MonoBehaviour
@@ -73,10 +76,16 @@ public class WaveManager : MonoBehaviour
 
 	public GameObject path;
 	public GameObject waveCompleteScreen;
+	public GameObject waveCooldownScreen;
 	
 	void Update ()
 	{
 		Wave current = waves [currentWave];
+
+		if (current.currentCooldownDelay > 0) {
+			CooldownCountdown ();
+			return;
+		}
 
 		if (!current.started) {
 
@@ -100,9 +109,9 @@ public class WaveManager : MonoBehaviour
 			}
 		} else if (!current.completed) {
 
-			current.currentDelay -= Time.deltaTime;
-			if (current.currentDelay < 0) {
-				current.currentDelay = current.delay;
+			current.currentSpawnDelay -= Time.deltaTime;
+			if (current.currentSpawnDelay < 0) {
+				current.currentSpawnDelay = Wave.SPAWN_DELAY;
 
 				if (current.queue.Count == 0 && current.AllEnemiesDied()) {
 
@@ -129,6 +138,17 @@ public class WaveManager : MonoBehaviour
 				currentWave++;
 			}
 		}
+	}
+
+	void CooldownCountdown () {
+		Wave current = waves [currentWave];
+
+		current.currentCooldownDelay -= Time.deltaTime;
+		waveCooldownScreen.SetActive (true);
+
+
+		Text text = waveCooldownScreen.GetComponentInChildren<Text> ();
+		text.text = "Next Wave in: " + Mathf.FloorToInt(current.currentCooldownDelay) + "s";
 	}
 
 }
