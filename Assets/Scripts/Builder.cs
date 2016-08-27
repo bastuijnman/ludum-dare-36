@@ -13,6 +13,8 @@ public class Builder : MonoBehaviour {
 		}
 
 		ghost = Instantiate (building);
+		ghost.AddComponent<BuildingRadiusCircle> ();
+
 		placing = true;
 	}
 
@@ -30,11 +32,12 @@ public class Builder : MonoBehaviour {
 
 			if (Input.GetMouseButton(0)) {
 
+				// TODO: attach correct building behaviours?
+				ghost.AddComponent<AttackBuilding>();
+
 				// Place down our building
 				placing = false;
 				ghost = null;
-
-				// TODO: attach correct building behaviours?
 			}
 		}
 
