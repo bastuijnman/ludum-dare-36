@@ -8,7 +8,7 @@ public class FollowPath : MonoBehaviour {
 
 	public Transform[] waypoints;
 
-	int currentWaypoint = 0;
+	public int currentWaypoint = 0;
 
 	float speed = 5;
 
