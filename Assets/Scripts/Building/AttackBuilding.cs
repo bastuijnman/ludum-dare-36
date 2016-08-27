@@ -23,7 +23,7 @@ public class AttackBuilding : MonoBehaviour
 	}
 
 	void OnTriggerEnter (Collider col) {
-		Debug.Log ("ENTER");
+
 		if (targets.Count < properties.maxAllowedTargets) {
 			targets.Add (col.gameObject);
 		}
