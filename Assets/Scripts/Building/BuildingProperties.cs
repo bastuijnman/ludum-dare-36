@@ -8,5 +8,11 @@ public class BuildingProperties : MonoBehaviour
 
 	public int radius;
 
+	public int damage;
+
+	public int maxAllowedTargets;
+
+	public float cooldown;
+
 }
 
