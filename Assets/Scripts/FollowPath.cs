@@ -12,6 +12,9 @@ public class FollowPath : MonoBehaviour {
 
 	float speed = 5;
 
+	public delegate void ReachedAction();
+	public static event ReachedAction OnDestinationReached;
+
 	// Use this for initialization
 	void Start () {
 		List<Transform> w = new List<Transform> ();
@@ -36,6 +39,12 @@ public class FollowPath : MonoBehaviour {
 	void OnTriggerEnter (Collider col) {
 		if (col.gameObject.tag == "waypoint") {
 			currentWaypoint++;
+
+			if (currentWaypoint == waypoints.Length - 1) {
+				if (OnDestinationReached != null) {
+					OnDestinationReached ();
+				}
+			}
 		}
 	}
 		

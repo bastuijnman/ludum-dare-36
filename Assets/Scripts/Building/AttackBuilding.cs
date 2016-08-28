@@ -44,7 +44,7 @@ public class AttackBuilding : MonoBehaviour
 	}
 
 	void Attack (GameObject target) {
-		EnemyProperties enemy = target.GetComponent<EnemyProperties> ();
+		Enemy enemy = target.GetComponent<Enemy> ();
 		enemy.Damage (properties.damage);
 
 		if (enemy.IsDead()) {

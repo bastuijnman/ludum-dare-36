@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-class Enemy {
+class EnemyType {
 	public string type;
 	public int number;
 }
@@ -12,7 +12,7 @@ class Enemy {
 class Wave {
 
 	// Enemy definitions
-	public Enemy[] enemies;
+	public EnemyType[] enemies;
 
 	// Wave has started
 	public bool started = false;
@@ -34,7 +34,7 @@ class Wave {
 
 	public bool AllEnemiesDied() {
 		for (int i = 0; i < spawns.Count; i++) {
-			if (!spawns[i].GetComponent<EnemyProperties>().IsDead()) {
+			if (!spawns[i].GetComponent<Enemy>().IsDead()) {
 				return false;
 			}
 		}
@@ -44,6 +44,7 @@ class Wave {
 	public void Spawn (GameObject enemy, Vector3 position, GameObject path) {
 		enemy.transform.position = position;
 
+		enemy.AddComponent<Enemy> ();
 		enemy.AddComponent<FollowPath> ();
 		enemy.AddComponent<Rigidbody> ();
 		enemy.GetComponent<FollowPath> ().path = path;
@@ -62,15 +63,15 @@ public class WaveManager : MonoBehaviour
 	Wave[] waves = new Wave[] {
 		// Wave 1
 		new Wave { 
-			enemies = new Enemy[] {
-				new Enemy { type = "Test", number = 5 }
+			enemies = new EnemyType[] {
+				new EnemyType { type = "Test", number = 5 }
 			}
 		},
 
 		// Wave 2
 		new Wave { 
-			enemies = new Enemy[] {
-				new Enemy { type = "Test", number = 5 }
+			enemies = new EnemyType[] {
+				new EnemyType { type = "Test", number = 5 }
 			}
 		}
 	};
@@ -107,7 +108,7 @@ public class WaveManager : MonoBehaviour
 			// Referencing issue?
 			current.started = true;
 
-			foreach (Enemy enemy in current.enemies) {
+			foreach (EnemyType enemy in current.enemies) {
 
 				UnityEngine.Object resource = Resources.Load ("Prefabs/Enemies/" + enemy.type);
 
