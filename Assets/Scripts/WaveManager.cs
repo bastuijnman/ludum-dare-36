@@ -23,6 +23,7 @@ class Wave {
 	// Current countdown for spawn delay
 	public float currentSpawnDelay = SPAWN_DELAY;
 
+	// Current countdown for wave cooldown
 	public float currentCooldownDelay = COOLDOWN_DELAY;
 
 	// Spawn queue
@@ -77,11 +78,23 @@ public class WaveManager : MonoBehaviour
 	public GameObject path;
 	public GameObject waveCompleteScreen;
 	public GameObject waveCooldownScreen;
+
+	float waveCompleteDelay = 5.0f;
 	
 	void Update ()
 	{
 		Wave current = waves [currentWave];
 
+		// Handle success state
+		if (waveCompleteScreen != null && waveCompleteScreen.activeSelf) {
+			waveCompleteDelay -= Time.deltaTime;
+			if (waveCompleteDelay <= 0) {
+				waveCompleteScreen.SetActive (false);
+				waveCompleteDelay = 5.0f;
+			}
+		}
+
+		// Handle wave cooldown
 		if (current.currentCooldownDelay > 0) {
 			CooldownCountdown ();
 			return;
@@ -123,14 +136,12 @@ public class WaveManager : MonoBehaviour
 					 */
 					if (waveCompleteScreen != null) {
 						waveCompleteScreen.SetActive (true);
-
-						// TODO: remove after cooldown
 					}
 
 					current.completed = true;
 					return;
 				}
-
+					
 				current.queue [0] ();
 				current.queue.RemoveAt (0);
 			}
