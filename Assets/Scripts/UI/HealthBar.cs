@@ -23,7 +23,6 @@ public class HealthBar : MonoBehaviour
 		// If we have the player calculate the amount of health
 		if (player != null) {
 			RectTransform rectTransform = health.GetComponent<RectTransform> ();
-			Debug.Log (player.GetHealthPercentage ());
 			rectTransform.sizeDelta = new Vector2 (-10 - (190 * (1 - player.GetHealthPercentage())), rectTransform.sizeDelta.y);
 		}
 	}

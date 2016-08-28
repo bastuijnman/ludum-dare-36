@@ -34,7 +34,7 @@ class Wave {
 
 	public bool AllEnemiesDied() {
 		for (int i = 0; i < spawns.Count; i++) {
-			if (!spawns[i].GetComponent<Enemy>().IsDead()) {
+			if (spawns[i] && !spawns[i].GetComponent<Enemy>().IsDead()) {
 				return false;
 			}
 		}
@@ -49,6 +49,8 @@ class Wave {
 		enemy.AddComponent<Rigidbody> ();
 		enemy.GetComponent<FollowPath> ().path = path;
 		enemy.GetComponent<Rigidbody> ().isKinematic = true;
+
+		spawns.Add (enemy);
 	}
 
 	public static float SPAWN_DELAY = 2.0f;
@@ -103,6 +105,21 @@ public class WaveManager : MonoBehaviour
 			waveCooldownScreen.SetActive (false);
 		}
 
+		// Handle complete logic
+		if (current.started && !current.completed && current.AllEnemiesDied() && current.queue.Count == 0) {
+			/*
+			 * If a wave complete screen is set, activate it and
+			 * remove it after the cooldown.
+			 */
+			if (waveCompleteScreen != null) {
+				waveCompleteScreen.SetActive (true);
+			}
+
+			current.completed = true;
+
+			return;
+		}
+
 		if (!current.started) {
 
 			// Referencing issue?
@@ -129,22 +146,10 @@ public class WaveManager : MonoBehaviour
 			if (current.currentSpawnDelay < 0) {
 				current.currentSpawnDelay = Wave.SPAWN_DELAY;
 
-				if (current.queue.Count == 0 && current.AllEnemiesDied()) {
-
-					/*
-					 * If a wave complete screen is set, activate it and
-					 * remove it after the cooldown.
-					 */
-					if (waveCompleteScreen != null) {
-						waveCompleteScreen.SetActive (true);
-					}
-
-					current.completed = true;
-					return;
+				if (current.queue.Count > 0) {
+					current.queue [0] ();
+					current.queue.RemoveAt (0);
 				}
-					
-				current.queue [0] ();
-				current.queue.RemoveAt (0);
 			}
 
 		} else {

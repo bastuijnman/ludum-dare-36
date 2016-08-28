@@ -32,7 +32,9 @@ public class Enemy : MonoBehaviour
 	void OnDestinationReached () {
 		Player player = FindObjectOfType<Player> ();
 
+		// Destination reached, destroy the Enemy object as it's no longer relevant
 		Destroy (gameObject);
+
 		if (player) {
 			player.Damage (properties.damage);
 		}
