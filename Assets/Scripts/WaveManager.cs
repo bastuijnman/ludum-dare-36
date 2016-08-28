@@ -85,6 +85,8 @@ public class WaveManager : MonoBehaviour
 		if (current.currentCooldownDelay > 0) {
 			CooldownCountdown ();
 			return;
+		} else {
+			waveCooldownScreen.SetActive (false);
 		}
 
 		if (!current.started) {
@@ -148,7 +150,7 @@ public class WaveManager : MonoBehaviour
 
 
 		Text text = waveCooldownScreen.GetComponentInChildren<Text> ();
-		text.text = "Next Wave in: " + Mathf.FloorToInt(current.currentCooldownDelay) + "s";
+		text.text = "Next Wave in: " + Mathf.CeilToInt(current.currentCooldownDelay) + "s";
 	}
 
 }
