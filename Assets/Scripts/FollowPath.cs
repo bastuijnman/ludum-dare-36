@@ -13,7 +13,7 @@ public class FollowPath : MonoBehaviour {
 	float speed = 5;
 
 	public delegate void ReachedAction();
-	public static event ReachedAction OnDestinationReached;
+	public event ReachedAction OnDestinationReached;
 
 	// Use this for initialization
 	void Start () {

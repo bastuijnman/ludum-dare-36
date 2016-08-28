@@ -52,7 +52,7 @@ class Wave {
 	}
 
 	public static float SPAWN_DELAY = 2.0f;
-	public static float COOLDOWN_DELAY = 30.0f;
+	public static float COOLDOWN_DELAY = 5.0f;
 }
 
 public class WaveManager : MonoBehaviour

@@ -8,5 +8,7 @@ public class EnemyProperties : MonoBehaviour
 
 	public int armor;
 
+	public int damage;
+
 }
 

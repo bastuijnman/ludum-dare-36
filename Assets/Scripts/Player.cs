@@ -5,6 +5,9 @@ public class Player : MonoBehaviour {
 
 	private int money = 500;
 
+	private int health = 100;
+	private int maxHealth = 100;
+
 	public int GetMoney () {
 		return money;
 	}
@@ -27,4 +30,13 @@ public class Player : MonoBehaviour {
 		}
 
 	}
+
+	public void Damage (int damage) {
+		health -= damage;
+	}
+
+	public float GetHealthPercentage () {
+		return (float)health / (float)maxHealth;
+	}
+
 }
